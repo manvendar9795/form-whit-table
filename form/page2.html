@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      .error {
+        color: red;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+    </style>
+    <title>redirect page2</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <h1>fill the form</h1>
+
+    <!-- form  -->
+    <div class="form-container">
+      <form id="dataForm">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+        />
+        <br>
+        <span id="nameError" class="error"></span>
+        <br />
+        <br />
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" placeholder="Enter your age" />
+        <br>
+        <span id="ageError" class="error"></span>
+        <br />
+        <br />
+
+        <label for="mobile">Mobile:</label>
+        <input
+          type="tel"
+          id="mobile"
+          name="mobile"
+          placeholder="Enter your mobile number"
+        />
+        <br>
+        <span id="mobileError" class="error"></span>
+        <br />
+        <br />
+
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+        />
+        <br>
+        <span id="emailError" class="error"></span>
+        <br />
+        <br />
+
+        <label>Gender:</label>
+        <br />
+        <input type="radio" id="male" name="gender" value="Male" />
+        <label for="male" style="display: inline">Male</label>
+        <input type="radio" id="female" name="gender" value="Female" />
+        <label for="female" style="display: inline">Female</label>
+        <br>
+        <span id="genderError" class="error"></span>
+
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#dataForm").submit(function (e) {
+          e.preventDefault(); // Prevent form from submitting traditionally
+
+          // Clear all previous error messages
+          $(".error").text("");
+
+          // Form Data
+          const name = $("#name").val().trim();
+          const age = $("#age").val().trim();
+          const mobile = $("#mobile").val().trim();
+          const email = $("#email").val().trim();
+          const gender = $("input[name='gender']:checked").val();
+
+          // Validation Flags
+          let isValid = true;
+
+          // Validate Name
+          if (!/^[A-Za-z\s]+$/.test(name)) {
+            $("#nameError").text("Name must contain only letters and spaces.");
+            isValid = false;
+          }
+
+          // Validate Age
+          if (age === "" || age < 1 || age > 120) {
+            $("#ageError").text("Age must be between 1 and 120.");
+            isValid = false;
+          }
+
+          // Validate Mobile
+          if (!/^\d{10}$/.test(mobile)) {
+            $("#mobileError").text("Mobile number must be exactly 10 digits.");
+            isValid = false;
+          }
+
+          // Validate Email
+          if (!/^\S+@\S+\.\S+$/.test(email)) {
+            $("#emailError").text("Please enter a valid email address.");
+            isValid = false;
+          }
+
+          // Validate Gender
+          if (!gender) {
+            $("#genderError").text("Please select a gender.");
+            isValid = false;
+          }
+
+          if (isValid) {
+            // Collect form data
+            const formData = {
+              name: $("#name").val(),
+              age: $("#age").val(),
+              mobile: $("#mobile").val(),
+              email: $("#email").val(),
+              gender: $("input[name='gender']:checked").val(),
+            };
+
+            // Retrieve existing data from local storage or initialize empty array
+            const storedData =
+              JSON.parse(localStorage.getItem("formData")) || [];
+
+            // Add new data to the array
+            storedData.push(formData);
+
+            // Save updated array back to local storage
+            localStorage.setItem("formData", JSON.stringify(storedData));
+
+            // Redirect to the index page
+            window.location.href = "index.html";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
